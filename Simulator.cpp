@@ -70,24 +70,3 @@ int Simulator::run_process(Process *curr_process, int curr_time,
   return curr_time;
 }
 
-std::vector<Process> Simulator::read_file(const std::string &path) {
-  std::ifstream file(path);
-
-  if (!file.is_open()) {
-    throw std::runtime_error("Não foi possível abrir o arquivo " + path);
-  }
-
-  std::vector<Process> processes;
-
-  int creation_date, duration, priority, id = 0;
-  while (file >> creation_date >> duration >> priority) {
-    std::string identifier = "P" + std::to_string(id++);
-    processes.emplace_back(creation_date, duration, priority, identifier);
-  }
-
-  std::sort(processes.begin(), processes.end(), [](const Process& a, const Process& b) {
-      return a.begin < b.begin;
-  });
-
-  return processes;
-}
