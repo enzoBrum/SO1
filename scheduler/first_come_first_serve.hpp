@@ -8,7 +8,7 @@ class FirstComeFirstServe : public Scheduler {
   public:
     void add_process(Process *proc) { 
       this->processes.push(proc);
-      proc->state = Process::State::READY;
+      proc->state = Process::READY;
     }
     bool empty() const { return this->processes.empty(); }
     void terminate_process(Process *proc) { 
@@ -23,6 +23,10 @@ class FirstComeFirstServe : public Scheduler {
 
       this->processes.pop();
       return proc;
+    }
+
+    bool process_is_running(Process *proc) const {
+      return proc->duration > 0;
     }
 
   private:

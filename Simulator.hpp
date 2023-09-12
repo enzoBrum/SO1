@@ -3,24 +3,27 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "scheduler/Scheduler.hpp"
+#include "process/Process.hpp"
 
 class Simulator {
  public:
-  Simulator(const std::string& path, Scheduler& sched)
-      : scheduler{sched}, processes{read_file(path)} {}
+  Simulator(const std::string& path, std::unique_ptr<Scheduler>& sched)
+    :scheduler{std::move(sched)}, processes{read_file(path)} {}
 
-  const std::vector<Process>& simulate();
+  void simulate();
 
-  std::vector<Process> read_file(const std::string& path);
+  const std::vector<std::unique_ptr<Process>>& get_processes() const {
+    return this->processes;
+  }
 
  private:
-  Scheduler &scheduler;
-  std::vector<Process> processes;
+  std::unique_ptr<Scheduler> scheduler;
+  std::vector<std::unique_ptr<Process>> processes;
 
-  int run_process(Process* proc, int curr_time,
-                  std::vector<Process>::iterator& next_process);
+  int run_process(Process* proc, int curr_time, std::vector<std::unique_ptr<Process>>::iterator& next_process);
 };
 
 #endif
