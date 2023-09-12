@@ -10,7 +10,6 @@
 void Simulator::simulate() {
   /*
    * TODO: mudança de contexto
-   * Preempção
    * */
 
   int curr_time = 0;

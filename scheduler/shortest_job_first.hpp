@@ -25,8 +25,6 @@ class ShortestJobFirst : public Scheduler {
     }
 
     Process *get_ready_process() {
-      // Assume que o processo retornado começará a ser executado
-
       Process *proc = this->processes.top();
       proc->state = Process::State::RUNNING;
 
@@ -56,6 +54,7 @@ class ShortestJobFirst : public Scheduler {
       this->processes.push(running_process);
       this->running_process = nullptr;
     }
+    
     
     std::priority_queue<Process*, std::vector<Process*>, CmpProcess> processes;
 };
