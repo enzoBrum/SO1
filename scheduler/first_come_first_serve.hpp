@@ -2,35 +2,12 @@
 #define FIRST_COME_FIRST_SERVE
 
 #include <queue>
-#include "Scheduler.hpp"
+#include "NonPreemptiveScheduler.hpp"
 
-class FirstComeFirstServe : public Scheduler {
+class FirstComeFirstServe : public NonPreemptiveScheduler {
   public:
-    void add_process(Process *proc) { 
-      this->processes.push(proc);
-      proc->state = Process::READY;
-    }
-    bool empty() const { return this->processes.empty(); }
-    void terminate_process(Process *proc) { 
-      proc->state = Process::State::TERMINATED;
-    }
-
-    Process *get_ready_process() {
-      // Assume que o processo retornado começará a ser executado
-
-      Process *proc = this->processes.front();
-      proc->state = Process::State::RUNNING;
-
-      this->processes.pop();
-      return proc;
-    }
-
-    bool process_is_running(Process *proc) const {
-      return proc->duration > 0;
-    }
-
-  private:
-    std::queue<Process*> processes;
+    FirstComeFirstServe()
+      :NonPreemptiveScheduler{std::make_unique<DefaultQueue>()} {}
 };
 
 #endif
