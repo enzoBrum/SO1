@@ -78,7 +78,9 @@ void Printer::printDiagram(const std::vector<Process*>& processes) {
 
   // - log10+1 da a quantidade de dígitos em um número.
   // - soma um para levar o "P" em conta
-  int num_of_digits = std::log10(std::max(processes.size() - 1, 1UL)) + 1;
+  int num_of_digits = (processes.size())
+                      ? std::log10(processes.size() - 1) + 1
+                      : 1; // log10(0) não existe, então atribuímos 1 diretamente
 
   std::cout << "tempo" << std::right;
   for (const auto& proc : processes) {
