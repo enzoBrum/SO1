@@ -29,6 +29,6 @@ int Ine5412Cpu::run_process(Kernel *kernel, Process *curr_process, std::vector<s
         }
     } while (kernel->get_scheduler()->process_is_running(curr_process));
 
-    curr_process->execution_intervals.emplace_back(begin, curr_time);
+    curr_process->execution_intervals.emplace_back(begin, curr_time - 1);
     return curr_time;
 }
