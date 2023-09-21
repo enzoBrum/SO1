@@ -34,6 +34,7 @@ class CPU {
       Kernel<T, N>* kernel, Process* curr_process,
       std::vector<std::unique_ptr<Process>>::iterator& next_process,
       int curr_time) = 0;
+
   virtual ~CPU(){};
 
   virtual void set_context(Context<T, N>& ctx) = 0;

@@ -16,8 +16,7 @@
 template <typename T, std::size_t N>
 class Kernel {
  public:
-  Kernel(const std::string& path, std::unique_ptr<Scheduler>& sched,
-         std::unique_ptr<CPU<T, N>>& cpu)
+  Kernel(const std::string& path, std::unique_ptr<Scheduler>& sched, std::unique_ptr<CPU<T, N>>& cpu)
       : scheduler{std::move(sched)},
         processes{read_file(path)},
         cpu{std::move(cpu)} {}
@@ -27,28 +26,29 @@ class Kernel {
    * dos processos
    */
   void simulate() {
-    int curr_time = 0;
-    auto next_process = this->processes.begin();
+    int curr_time = 0; 
+    auto next_process = this->processes.begin(); // iterator para o próximo processo a ser iniciado
 
     while (next_process != this->processes.end() || !this->scheduler->empty()) {
-      if (this->scheduler->empty() ||
-          (next_process != this->processes.end() &&
-           (*next_process)->creation_time == curr_time)) {
-        curr_time = (*next_process)->creation_time;
+      // Caso o escalonador esteja vazio ou algum processo tenha sido criado nesse momento, temos que adicionar um processo
+      // ao escalonador.
+      if (
+          this->scheduler->empty() ||
+          (next_process != this->processes.end() && (*next_process)->creation_time == curr_time)
+      ) {
+        curr_time = (*next_process)->creation_time; // se o escalonador está vazio, há uma chance que o pró
         this->scheduler->add_process(next_process->get());
         next_process++;
         continue;
       }
 
+      // senão, pegamos um processo pronto do escalonador e iniciamos sua execução
       Process* curr_process = this->scheduler->get_ready_process();
       curr_process->execution_time = 0;
 
-      
-
       this->cpu->set_context(curr_process->ctx);
       curr_process->context_switches++;
-      curr_time =
-          this->cpu->run_process(this, curr_process, next_process, curr_time);
+      curr_time = this->cpu->run_process(this, curr_process, next_process, curr_time);
       curr_process->ctx = this->cpu->get_context();
     }
   }
